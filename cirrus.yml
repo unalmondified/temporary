@@ -1,0 +1,55 @@
+env:
+  TZ: Asia/Ho_Chi_Minh
+
+task:
+  name: "Lumi Builds"
+  timeout_in: 120m  
+  container:
+      image: ubuntu:latest
+      cpu: 8
+      memory: 32G
+  
+  Env-Setup_script:
+       - export DEBIAN_FRONTEND=noninteractive
+       - apt update
+       - apt install sudo
+       - DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+       - ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
+       - apt-get install -y tzdata
+       - dpkg-reconfigure --frontend noninteractive tzdata
+       - sudo apt update -y && sudo apt install git bc bison build-essential pigz ccache curl flex g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
+       - sudo apt install python-is-python3 -y
+       - git config --global user.name "HoangLong-Lumi"
+       - git config --global user.email "hoanglong.lumi404@gmail.com"
+       - ssh-keygen -t rsa -q -f "$HOME/.ssh/id_rsa" -N ""
+
+  Sync_script:
+       - mkdir $HOME/bin
+       - curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
+       - chmod a+x $HOME/bin/repo
+       - export PATH="$PATH:$HOME/bin"
+       - mkdir ~/Lineage
+       - cd ~/Lineage
+       - repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-19.1 -g default,-mips,-darwin,-notdefault
+       - git clone https://github.com/HoangLong-Lumi/localmanifest --depth 1 -b lineage-19.1 .repo/local_manifests
+       - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24
+
+  SDK_script:
+       - wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+       - unzip platform-tools-latest-linux.zip -d ~
+       - export PATH="\$HOME/platform-tools:\$PATH"
+
+  Build_script:
+       - cd ~/Lineage
+       - export PATH="$PATH:$HOME/bin"
+       - export ALLOW_MISSING_DEPENDENCIES=true
+       - export USE_CCACHE=0
+       - . build/envsetup.sh
+       - lunch lineage_casuarina-userdebug
+       - make vendorimage -j16
+
+  Upload_build_script:
+       - cd ~/Lineage/out/target/product/casuarina
+       - gzip -5 -k vendor.img
+       - curl -sL https://git.io/file-transfer | sh
+       - ./transfer wet vendor.img.gz
