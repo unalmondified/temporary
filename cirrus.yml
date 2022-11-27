@@ -21,7 +21,6 @@ task:
        - sudo apt install python-is-python3 -y
        - git config --global user.name "HoangLong-Lumi"
        - git config --global user.email "hoanglong.lumi404@gmail.com"
-       - ssh-keygen -t rsa -q -f "$HOME/.ssh/id_rsa" -N ""
 
   Sync_script:
        - mkdir $HOME/bin
