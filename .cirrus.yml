@@ -17,7 +17,7 @@ task:
        - ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
        - apt-get install -y tzdata
        - dpkg-reconfigure --frontend noninteractive tzdata
-       - sudo apt update -y && sudo apt install git bc bison build-essential pigz ccache curl flex g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
+       - sudo apt update -y && sudo apt install git bc bison build-essential pigz ccache curl flex libssl-dev g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
        - sudo apt install python-is-python3 -y
        - git config --global user.name "HoangLong-Lumi"
        - git config --global user.email "hoanglong.lumi404@gmail.com"
