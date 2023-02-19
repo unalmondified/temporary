@@ -28,8 +28,8 @@ task:
        - curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
        - chmod a+x $HOME/bin/repo
        - export PATH="$PATH:$HOME/bin"
-       - mkdir ~/Lineage
-       - cd ~/Lineage
+       - mkdir ~/lineage
+       - cd ~/lineage
        - repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-20.0 -g default,-mips,-darwin,-notdefault
        - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24
        - git clone https://github.com/HoangLong-Lumi/android_device_samsung_exynos9820-common --depth=1 -b lineage-20.0 device/samsung/exynos9820-common
@@ -44,16 +44,16 @@ task:
        - export PATH="\$HOME/platform-tools:\$PATH"
 
   Build_script:
-       - cd ~/Lineage
+       - cd ~/lineage
        - export PATH="$PATH:$HOME/bin"
        - export ALLOW_MISSING_DEPENDENCIES=true
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_beyond2lte-userdebug
-       - make vendorimage -j10
+       - make vendorimage -j9
 
   Upload_build_script:
-       - cd ~/Lineage/out/target/product/beyond2lte
+       - cd ~/lineage/out/target/product/beyond2lte
        - gzip -5 -k vendor.img
        - curl -sL https://git.io/file-transfer | sh
        - ./transfer wet vendor.img.gz
