@@ -50,7 +50,7 @@ task:
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_beyond2lte-userdebug
-       - make vendorimage -j9
+       - make vendorimage -j8
 
   Upload_build_script:
        - cd ~/lineage/out/target/product/beyond2lte
