@@ -17,10 +17,10 @@ task:
        - ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
        - apt-get install -y tzdata
        - dpkg-reconfigure --frontend noninteractive tzdata
-       - sudo apt update -y && sudo apt install git bc bison build-essential pigz ccache curl flex libssl-dev g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
+       - sudo apt update -y && sudo apt install git bc bison build-essential pigz ccache curl flex g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
        - sudo apt install python-is-python3 -y
        - git config --global user.name "HoangLong-Lumi"
-       - git config --global user.email "hoanglong.lumi404@gmail.com"
+       - git config --global user.email "adasdhbjwqbekjqwhe@gmail.com"
        - ssh-keygen -t rsa -q -f "$HOME/.ssh/id_rsa" -N ""
 
   Sync_script:
@@ -28,15 +28,13 @@ task:
        - curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
        - chmod a+x $HOME/bin/repo
        - export PATH="$PATH:$HOME/bin"
-       - mkdir ~/lineage
-       - cd ~/lineage
-       - repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-20.0 -g default,-mips,-darwin,-notdefault
+       - mkdir ~/Lineage
+       - cd ~/Lineage
+       - repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-17.1 -g default,-mips,-darwin,-notdefault
        - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24
-       - git clone https://github.com/HoangLong-Lumi/android_device_samsung_exynos9820-common --depth=1 -b lineage-20.0 device/samsung/exynos9820-common
-       - git clone https://github.com/HoangLong-Lumi/proprietary_vendor_samsung --depth=1 -b lineage-20.0 vendor/samsung
-       - git clone https://github.com/LineageOS/android_device_samsung_beyond2lte --depth=1 -b lineage-20 device/samsung/beyond2lte
-       - git clone https://github.com/LineageOS/android_device_samsung_slsi_sepolicy --depth=1 -b lineage-20 device/samsung_slsi/sepolicy
-       - git clone https://github.com/Linux4/android_kernel_samsung_exynos9820 --depth=1 kernel/samsung/exynos9820
+       - git clone https://github.com/almondnguyen/android_kernel_samsung_grandppltedx --depth=1 -b lineage-15.1 kernel/samsung/grandppltedx
+       - git clone https://github.com/almondnguyen/android_device_samsung_grandppltedx --depth=1 -b lineage-17.1 device/samsung/grandppltedx
+       - git clone https://github.com/almondnguyen/android_vendor_samsung_grandppltedx --depth=1 -b lineage-16.0 vendor/samsung/grandppltedx
 
   SDK_script:
        - wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
@@ -44,16 +42,15 @@ task:
        - export PATH="\$HOME/platform-tools:\$PATH"
 
   Build_script:
-       - cd ~/lineage
+       - cd ~/Lineage
        - export PATH="$PATH:$HOME/bin"
        - export ALLOW_MISSING_DEPENDENCIES=true
        - export USE_CCACHE=0
        - . build/envsetup.sh
-       - lunch lineage_beyond2lte-userdebug
-       - make vendorimage -j8
+       - lunch lineage_grandppltedx-userdebug
+       - make recoveryimage -j10
 
   Upload_build_script:
-       - cd ~/lineage/out/target/product/beyond2lte
-       - gzip -5 -k vendor.img
+       - cd ~/Lineage/out/target/product/grandppltedx
        - curl -sL https://git.io/file-transfer | sh
-       - ./transfer wet vendor.img.gz
+       - ./transfer wet recovery.img
