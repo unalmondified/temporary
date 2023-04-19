@@ -27,7 +27,7 @@ task:
        - curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
        - chmod a+x $HOME/bin/repo
        - export PATH="$PATH:$HOME/bin"
-       - mkdir ~/Lineage
+       - mkdir ~/Lineage ~/LineageCCache
        - cd ~/Lineage
        - repo init --depth=1 --no-repo-verify -u https://github.com/HoangLong-Lumi/android.git -b lineage-17.1 -g default,-mips,-darwin,-notdefault
        - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24
@@ -42,12 +42,14 @@ task:
        - export CCACHE_DIR=~/LineageCCache/cache
        - export CCACHE_EXEC=$(which ccache)
        - export USE_CCACHE=1
+       - ccache -M 20G
+       - ccache -o compression=true
+       - ccache -z
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
        - make bacon -j5
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
-       - gzip -5k vendor.img
        - curl -sL https://git.io/file-transfer | sh
        - ./transfer anon lineage-17.1-*-grandppltedx.zip
