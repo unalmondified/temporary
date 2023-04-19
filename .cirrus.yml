@@ -48,7 +48,7 @@ task:
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
-       - make recoveryimage -j10
+       - make vendorimage -j8
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
