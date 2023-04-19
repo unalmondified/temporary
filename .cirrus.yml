@@ -6,8 +6,8 @@ task:
   timeout_in: 120m  
   container:
       image: ubuntu:latest
-      cpu: 7
-      memory: 28G
+      cpu: 6
+      memory: 24G
   
   Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
@@ -16,7 +16,7 @@ task:
        - ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
        - apt-get install -y tzdata
        - dpkg-reconfigure --frontend noninteractive tzdata
-       - apt update -y && apt install git bc bison build-essential pigz ccache curl flex g++-multilib grep gcc-multilib ccache lib32ncurses5-dev lib32readline-dev lib32z1-dev aria2 curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
+       - apt update -y && apt install git bc bison build-essential ccache flex lib32ncurses5-dev lib32readline-dev lib32z1-dev curl wget rsync zip unzip lzma cpio neofetch libc6-dev-i386 libncurses5-dev libncurses5 -y
        - apt install python-is-python3 -y
        - git config --global user.name "HoangLong-Lumi"
        - git config --global user.email "adasdhbjwqbekjqwhe@gmail.com"
@@ -29,7 +29,7 @@ task:
        - export PATH="$PATH:$HOME/bin"
        - mkdir ~/Lineage
        - cd ~/Lineage
-       - repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-17.1 -g default,-mips,-darwin,-notdefault
+       - repo init --depth=1 --no-repo-verify -u https://github.com/HoangLong-Lumi/android.git -b lineage-17.1 -g default,-mips,-darwin,-notdefault
        - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j24
        - git clone https://github.com/almondnguyen/android_kernel_samsung_grandppltedx --depth=1 -b lineage-15.1 kernel/samsung/grandppltedx
        - git clone https://github.com/almondnguyen/android_device_samsung_grandppltedx --depth=1 -b lineage-17.1 device/samsung/grandppltedx
@@ -47,9 +47,10 @@ task:
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
-       - make recoveryimage -j6
+       - make vendorimage -j6
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
+       - gzip -5k vendor.img
        - curl -sL https://git.io/file-transfer | sh
-       - ./transfer anon recovery.img
+       - ./transfer anon vendor.img.gz
