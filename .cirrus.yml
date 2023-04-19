@@ -6,8 +6,8 @@ task:
   timeout_in: 120m  
   container:
       image: ubuntu:latest
-      cpu: 6
-      memory: 24G
+      cpu: 7
+      memory: 28G
   
   Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
@@ -35,22 +35,19 @@ task:
        - git clone https://github.com/almondnguyen/android_device_samsung_grandppltedx --depth=1 -b lineage-17.1 device/samsung/grandppltedx
        - git clone https://github.com/almondnguyen/android_vendor_samsung_grandppltedx --depth=1 -b lineage-16.0 vendor/samsung/grandppltedx
 
-  SDK_script:
-       - wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
-       - unzip platform-tools-latest-linux.zip -d ~
-       - export PATH="\$HOME/platform-tools:\$PATH"
-
   Build_script:
        - cd ~/Lineage
        - export PATH="$PATH:$HOME/bin"
        - export ALLOW_MISSING_DEPENDENCIES=true
-       - export USE_CCACHE=0
+       - export CCACHE_DIR=~/LineageCCache/cache
+       - export CCACHE_EXEC=$(which ccache)
+       - export USE_CCACHE=1
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
-       - make vendorimage -j5
+       - make bacon -j5
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
        - gzip -5k vendor.img
        - curl -sL https://git.io/file-transfer | sh
-       - ./transfer anon vendor.img.gz
+       - ./transfer anon lineage-17.1-*-grandppltedx.zip
