@@ -6,8 +6,8 @@ task:
   timeout_in: 120m  
   container:
       image: ubuntu:latest
-      cpu: 8
-      memory: 32G
+      cpu: 7
+      memory: 28G
   
   Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
@@ -48,9 +48,9 @@ task:
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
-       - make vendorimage -j8
+       - make recoveryimage -j6
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
        - curl -sL https://git.io/file-transfer | sh
-       - ./transfer wet recovery.img
+       - ./transfer anon recovery.img
