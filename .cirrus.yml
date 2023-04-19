@@ -7,7 +7,7 @@ task:
   container:
       image: ubuntu:latest
       cpu: 6
-      memory: 24G
+      memory: 28G
   
   Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
@@ -47,7 +47,7 @@ task:
        - export USE_CCACHE=0
        - . build/envsetup.sh
        - lunch lineage_grandppltedx-userdebug
-       - make vendorimage -j6
+       - make vendorimage -j5
 
   Upload_build_script:
        - cd ~/Lineage/out/target/product/grandppltedx
